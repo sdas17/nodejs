@@ -7,15 +7,16 @@ import dotenv from 'dotenv';
 import colors from 'colors'
 import cors from 'cors';
 import morgan from "morgan";
-import connectDB from './config/db.js';
 import testroutes from './routers/testroutes.js';
+import autoRoutes from './routers/authRoutes.js'
 
+import connectDB from './config/db.js'
 //Dot env config
 dotenv.config();
 //rest
 
 //MONGODB CONNECTION
-connectDB()
+connectDB();
 const app = express();
 
 
@@ -23,9 +24,9 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 app.use(morgan('dev'))
-
 //routes
 app.use('/api/v1/test', testroutes);
+app.use("/api/v1/auth",autoRoutes);
 
 //listen
 app.listen(process.env.Port, () => {
