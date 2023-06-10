@@ -1,26 +1,25 @@
 import userModule from "../models/userModule.js";
 
-export const registerController = async(req,res) => { 
+export const registerController = async(req,res,next) => { 
+    
     try {
-        const {name,email,password}=req.body
+        const {name,email,password,location}=req.body
 
         if (!name) {
-            return req.status(400).send({succes:false,message:'please provide name'})
+            next('name is require')
         }
         if (!email) {
-            return req.status(400).send({succes:false,message:'please provide name'})
+            next('email is require')
         }
         if (!password) {
-            return req.status(400).send({succes:false,message:'please provide name'})
+            next('password is require greater 6 char')
         }
         const exitinguser=await userModule.findOne({email});
         if (exitinguser) {
-            return res.status(200).send({
-                succes:false,
-                message:'Email alredy Register please Login'
-            });
+          next('email')
         }
-        const exitinguser1=await userModule.create({name,email,password});
+        const exitinguser1=await userModule.create({name,email,password,location});
+
         if (exitinguser1) {
             return res.status(200).send({
                 succes:false,
@@ -29,12 +28,13 @@ export const registerController = async(req,res) => {
         }
 
     } catch (error) {
-        console.log(error);
-        res.status(400).send({
-            message:'Error in Register Controller',
-            succes:false,
-            error
-        })
+        // console.log(error);
+        // res.status(400).send({
+        //     message:'Error in Register Controller',
+        //     succes:false,
+        //     error
+        // })
+        next(error);
     }
 };
 

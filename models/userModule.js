@@ -19,7 +19,9 @@ const userSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        default: 'ghazipur',
+        // default: 'ghazipur',
+        required: [true, 'location is Require'],
+
     },
 
 

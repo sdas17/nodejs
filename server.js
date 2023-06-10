@@ -11,6 +11,7 @@ import testroutes from './routers/testroutes.js';
 import autoRoutes from './routers/authRoutes.js'
 
 import connectDB from './config/db.js'
+import errroMiddelware from './middlewares/errorMiddle.js';
 //Dot env config
 dotenv.config();
 //rest
@@ -27,6 +28,10 @@ app.use(morgan('dev'))
 //routes
 app.use('/api/v1/test', testroutes);
 app.use("/api/v1/auth",autoRoutes);
+app.use('/app/v1/getapi',autoRoutes)
+
+//validation middelware
+app.use(errroMiddelware);
 
 //listen
 app.listen(process.env.Port, () => {
