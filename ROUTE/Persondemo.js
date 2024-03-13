@@ -1,7 +1,8 @@
 const express=require('express');
 const router=express.Router();
 const Person=require('../configuration/Person');
-
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 router.post("/", async (req, res) => {
     try {
         const data = req.body;
@@ -15,6 +16,27 @@ router.post("/", async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+passport.use(new LocalStrategy(
+    //authentication logic here
+    async (username, password, done) => {
+      try {
+       console.log('usercredentical',username);
+       const user = await Person.findOne({ username });
+       if (!user)
+            return done(null, false, { message: 'Incorrect username.' });
+        const isPasswordMatch = await user.comparePassword(password);
+
+        if (isPasswordMatch)
+            return done(null, user);
+        else
+            return done(null, false, { message: 'Incorrect password.' })
+      } catch (error) {
+        return done(error);
+
+      }
+    }
+  ));
 
 router.get('/:worktype',async (req,res)=>{
     try {
