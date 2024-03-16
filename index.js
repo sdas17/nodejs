@@ -2,17 +2,19 @@ const express = require('express');
 let server = express();
 const db=require('../nodejs/configuration/dbconfiguration');
 const bodyParser = require('body-parser');
+const passport = require('./auth');
 
 require('dotenv').config();
 
 // middle ware
-const demoMiddleware= (req,res,next)=>{
-    console.log(`[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`);
-    next()
-}
-server.use(demoMiddleware); 
+// const demoMiddleware= (req,res,next)=>{
+//     console.log(`[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`);
+//     next()
+// }
+// server.use(demoMiddleware); 
+server.use(passport.initialize());
 
-server.get('/',function (req,res){
+server.get('/',passport.authenticate('local', {session: false}),function (req,res){
     res.send('welcome to our new hotels')
 })
 
